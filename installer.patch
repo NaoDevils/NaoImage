@@ -1,0 +1,22 @@
+--- opn/installer.sh	2020-11-06 16:55:18.143954083 +0100
++++ opn/installer-new.sh	2020-11-06 17:14:33.515159758 +0100
+@@ -828,7 +828,7 @@
+   local dd_progress=
+   local cmd="dd if=${image_file} ${dd_args} count=${IMAGE_CMP_SIZE} 2>/dev/null"
+   local cmd="${cmd} | gunzip -c"
+-  local cmd="${cmd} | dd of=${dest_part} bs=${SIZE_BASE} count=${IMAGE_RAW_SIZE} 2>${dd_progress_file}"
++  local cmd="${cmd} | dd of=${dest_part} bs=4096 2>${dd_progress_file}"
+   local cmd="${cmd} ; sync ; sync"
+   elog "cmd: ${cmd}"
+   cat <<EOF >${dd_loop}
+@@ -966,6 +966,10 @@
+       sleep 2 ; sync
+       /usr/libexec/chest-harakiri
+       halt -f
++    else
++      umount -fr $(mount | grep '^/dev' | cut -d' ' -f3)
++      sleep 2 ; sync
++      /usr/libexec/chest-harakiri -r
+     fi
+     exit ${status}
+ }

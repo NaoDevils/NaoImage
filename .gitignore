@@ -1,0 +1,6 @@
+*.opn
+*.ext3
+*.ext3.gz
+nao/
+opn/
+root/
