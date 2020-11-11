@@ -148,4 +148,23 @@ ctl.ttable {
 }
 EOT
 
+# copy data
+if [ "$COPY_DATA" == "true" ]; then
+    if [ -z "$FRAMEWORK_DIR" ]; then
+        read -p "Please enter framework path: " FRAMEWORK_DIR
+    fi
+
+    BUILD_CONFIG="${BUILD_CONFIG:-Develop}"
+
+    mkdir -p ./root/nao/bin ./root/nao/Config ./root/nao/logs
+    cp -r "$FRAMEWORK_DIR/Config" ./root/nao
+    cp "$FRAMEWORK_DIR/Build/Linux/Nao/$BUILD_CONFIG/naodevils" \
+        "$FRAMEWORK_DIR/Build/Linux/ndevilsbase/$BUILD_CONFIG/naodevilsbase" \
+        "$FRAMEWORK_DIR/Build/Linux/sensorReader/$BUILD_CONFIG/sensorReader" \
+        ./root/nao/bin
+
+    chmod +x ./root/nao/bin/*
+    chown -R 1001:1001 ./root/nao/bin ./root/nao/Config ./root/nao/logs
+fi
+
 ############################ END FRAMEWORK INSTALLATION ############################
