@@ -127,3 +127,8 @@ with open(opn_file, 'w+b', buffering=0) as opn:
     header_checksum = hashlib.sha256(opn.read(4040))
     opn.seek(24)
     opn.write(header_checksum.digest())
+
+    # print checksums
+    print(f'Installer checksum: {installer_checksum.hexdigest()}')
+    print(f'Image checksum: {image_checksum.hexdigest()}')
+    print(f'Header checksum: {header_checksum.hexdigest()}')
