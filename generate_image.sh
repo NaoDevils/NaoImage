@@ -508,6 +508,6 @@ rm -r ./root/var/lib/apt/lists/* ./root/var/log/* ./root/var/cache/*
 
 echo "Installation done! Generate filesystem..."
 # generate filesystem with correct UUID and maximum size for Nao's system partition
-mke2fs -U 42424242-1120-1120-1120-424242424242 -L "NaoDevils-system" -b 4096 -t ext3 -d ./root "$OUTPUT_IMAGE" 999168
+mke2fs -F -U 42424242-1120-1120-1120-424242424242 -L "NaoDevils-system" -b 4096 -t ext3 -d ./root "$OUTPUT_IMAGE" 999168
 
 echo "Done!"
