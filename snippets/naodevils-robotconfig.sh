@@ -31,7 +31,7 @@ network:
         "SPL_5GHz":
           password: "Nao?!Nao?!"
       addresses:
-        - 10.0.12.$NUMBER/24
+        - 10.0.12.$NUMBER/16
       dhcp4: false
       dhcp6: false
 TOE
