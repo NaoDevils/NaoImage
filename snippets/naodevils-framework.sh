@@ -97,6 +97,8 @@ log statistics measurements tracking rtc
 EOT
 sed -i 's#DAEMON_OPTS="-F -1"#DAEMON_OPTS="-r -s -F -1"#' ./root/etc/default/chrony
 
+echo 'nao ALL=(ALL) NOPASSWD: /usr/bin/chronyc -n burst 2/10,/usr/bin/chronyc -n makestep 0.1 1' > ./root/etc/sudoers.d/chronyc
+
 # install nao devils alsa configuration
 mkdir -p ./root/etc/alsa/conf.d
 cat - <<"EOT" > ./root/etc/alsa/conf.d/naodevils.conf
