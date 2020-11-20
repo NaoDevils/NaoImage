@@ -93,7 +93,8 @@ rtcfile /var/lib/chrony/chrony.rtc
 dumponexit
 dumpdir /var/lib/chrony
 logdir /var/log/chrony
-log statistics measurements tracking rtc 
+log statistics measurements tracking rtc
+maxslewrate 0
 EOT
 sed -i 's#DAEMON_OPTS="-F -1"#DAEMON_OPTS="-r -s -F -1"#' ./root/etc/default/chrony
 
