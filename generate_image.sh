@@ -406,6 +406,7 @@ cat - <<"EOT" > ./root/etc/systemd/system/move_nao_folder.service
 [Unit]
 Description=Move nao folder
 After=home.mount
+Before=user@1001.service
 DefaultDependencies=no
 
 [Service]
