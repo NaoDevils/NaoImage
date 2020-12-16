@@ -419,6 +419,22 @@ WantedBy=sysinit.target
 EOT
 ln -s ../move_nao_folder.service ./root/etc/systemd/system/sysinit.target.wants/move_nao_folder.service
 
+# remove NAOqi notifications
+cat - <<"EOT" > ./root/etc/systemd/system/remove_naoqi_notifications.service
+[Unit]
+Description=Remove NAOqi notifications
+After=media-internal.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rm -rf /media/internal/notification
+ExecStartPost=/bin/systemctl disable remove_naoqi_notifications
+
+[Install]
+WantedBy=sysinit.target
+EOT
+ln -s ../remove_naoqi_notifications.service ./root/etc/systemd/system/sysinit.target.wants/remove_naoqi_notifications.service
+
 chown -R 1001:1001 ./root/nao
 
 # kernel
