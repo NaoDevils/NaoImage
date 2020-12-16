@@ -29,4 +29,18 @@ ln -sf vmlinuz-4.4.86-rt99-aldebaran-g085ca88f9bd1 ./root/boot/vmlinuz
 # ln -sf vmlinuz-5.4.70-rt40-aldebaran-naodevils-00371-g2f8f53592324 ./root/boot/vmlinuz.efi
 # ln -sf vmlinuz-5.4.70-rt40-aldebaran-naodevils-00371-g2f8f53592324 ./root/boot/vmlinuz
 
+# disable dynamic gpu frequency scaling
+cat - <<"EOT" > ./root/etc/systemd/system/gpu_min_frequency.service
+[Unit]
+Description=GPU min frequency
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c 'echo 791 > /sys/class/drm/card0/gt_min_freq_mhz'
+
+[Install]
+WantedBy=sysinit.target
+EOT
+ln -s ../gpu_min_frequency.service ./root/etc/systemd/system/sysinit.target.wants/gpu_min_frequency.service
+
 ############################ END OPENCL INSTALLATION ############################
