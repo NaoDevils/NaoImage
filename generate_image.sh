@@ -470,6 +470,7 @@ echo 'L+		/var/tmp		1777	-	-	-   volatile/tmp' >> ./root/etc/tmpfiles.d/00-creat
 cp -av ./nao/etc/udev/rules.d/42-usb-cx3.rules ./nao/etc/udev/rules.d/99-aldebaran.rules ./root/etc/udev/rules.d # load camera firmware
 sed -i 's#/usr/bin/flash-cx3#/opt/aldebaran/bin/flash-cx3#' ./root/etc/udev/rules.d/42-usb-cx3.rules
 sed -i 's#/usr/share/firmware/CX3RDK_OV5640_#/opt/aldebaran/share/firmware/CX3RDK_OV5640_#' ./root/etc/udev/rules.d/42-usb-cx3.rules
+sed -i 's#TAG+="systemd", #ATTR{index}=="0", TAG+="systemd", #' ./root/etc/udev/rules.d/42-usb-cx3.rules # fix for 5.4 kernel (two devices per camera)
 sed -i 's#/usr/libexec/reset-cameras.sh#/opt/aldebaran/libexec/reset-cameras.sh#' ./root/etc/udev/rules.d/99-aldebaran.rules
 cp -av ./nao/usr/lib/modules-load.d/* ./root/usr/lib/modules-load.d # load additional kernel modules
 cp -av ./nao/lib/systemd/system-shutdown/harakiri ./root/lib/systemd/system-shutdown # to power down chestboard on shut down
