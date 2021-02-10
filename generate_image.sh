@@ -45,7 +45,7 @@ if [ "$INPUT_IMAGE" -nt "./opn/nao.ext3" ]; then
     echo "Done!"
 fi
 
-# check for previous (mabye incomplete?) run
+# check for previous (maybe incomplete?) run
 if [ -d ./root ]; then
     read -p "Remove files from previous run? (y/n) " yn
     case $yn in
