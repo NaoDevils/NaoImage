@@ -170,4 +170,13 @@ if [ "$COPY_DATA" == "true" ]; then
     chown -R 1001:1001 ./root/nao/bin ./root/nao/Config ./root/nao/logs
 fi
 
+# add git commit hashes
+GIT_IMAGE="$(git rev-parse --short HEAD)"
+GIT_FRAMEWORK="$(git -C "$FRAMEWORK_DIR" rev-parse --short HEAD)"
+
+date > ./root/nao/version_info.txt
+echo "Image=$GIT_IMAGE" >> ./root/nao/version_info.txt
+echo "Framework=$GIT_FRAMEWORK" >> ./root/nao/version_info.txt
+
+
 ############################ END FRAMEWORK INSTALLATION ############################
