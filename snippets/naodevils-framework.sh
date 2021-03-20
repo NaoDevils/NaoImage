@@ -9,7 +9,7 @@ chroot ./root /bin/bash <<"EOT"
 set -e 
 set -o pipefail
 
-apt-get install -y alsa chrony gdb rsync
+apt-get install -y alsa chrony gdb rsync espeak
 exit
 EOT
 umount ./root/dev/pts
@@ -150,6 +150,24 @@ ctl.ttable {
         card 0;
 }
 EOT
+
+# add text-to-speech output of ethernet ip address
+cat - <<"EOT" > ./root/etc/networkd-dispatcher/routable.d/say-ip
+#!/bin/bash
+
+set -e
+
+if [ "$IFACE" = "eth0" ] && [ "$(hostname)" = "Nao" ]; then
+    IP="$(ip -4 addr show eth0 | grep -oPm1 '(?<=inet\s)\d+(\.\d+){3}' | sed 's/\./. /g')"
+    espeak -ven "$IP"
+fi
+
+env > /test.txt
+
+exit 0
+EOT
+
+chmod +x ./root/etc/networkd-dispatcher/routable.d/say-ip
 
 # copy data
 if [ "$COPY_DATA" == "true" ]; then
