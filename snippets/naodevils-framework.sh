@@ -9,7 +9,7 @@ chroot ./root /bin/bash <<"EOT"
 set -e 
 set -o pipefail
 
-apt-get install -y alsa chrony gdb rsync espeak
+apt-get install -y alsa chrony gdb rsync espeak ntfs-3g exfat-fuse
 exit
 EOT
 umount ./root/dev/pts
@@ -74,8 +74,19 @@ echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q9dQcRgn4dVOGt4h+jvlfDhkH/irCSqEAggZk
 chmod 700 ./root/nao/.ssh ./root/root/.ssh
 chmod 600 ./root/nao/.ssh/authorized_keys ./root/root/.ssh/authorized_keys
 
-# only needed if we link against the old sysroot
-# tar -C ./root/nao/ -xvzpf NDevils2015.tgz
+# add usb stick mount
+cat - <<"EOT" >> ./root/etc/fstab
+/dev/sda1            /home/nao/usb        auto       rw,noatime,noauto,user  0  0
+EOT
+mkdir ./root/nao/usb
+
+# give nao user permssions to write on usb stick
+cat - <<"EOT" >> ./root/etc/udev/rules.d/99-usb-stick.rules
+SUBSYSTEM=="block", KERNEL=="sda*", ACTION=="add", RUN+="/bin/chgrp nao /dev/$name"
+EOT
+
+# set suid bit for ntfs and exfat support in user-space
+chmod u+s ./root/usr/bin/ntfs-3g ./root/usr/sbin/mount.exfat-fuse
 
 chown -R 1001:1001 ./root/nao
 
