@@ -24,11 +24,17 @@ Description=Nao Devils Framework
 After=naodevilsbase.service dev-video\x2dtop.device dev-video\x2dbottom.device
 Requires=naodevilsbase.service dev-video\x2dtop.device dev-video\x2dbottom.device
 
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
 [Service]
 Type=simple
 LimitRTPRIO=36
 ExecStart=/home/nao/bin/naodevils -w
 TimeoutStartSec=30
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=default.target
@@ -39,11 +45,17 @@ Description=Nao Devils Base
 After=lola.service
 Requires=lola.service
 
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
 [Service]
 Type=simple
 LimitRTPRIO=36
 ExecStart=/home/nao/bin/naodevilsbase
 TimeoutStartSec=30
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=default.target
@@ -54,10 +66,16 @@ Description=Nao Devils Sensor Reader
 After=naodevilsbase.service
 Requires=naodevilsbase.service
 
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
 [Service]
 Type=simple
 ExecStart=/home/nao/bin/sensorReader
 TimeoutStartSec=30
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=default.target
