@@ -106,6 +106,31 @@ EOT
 # set suid bit for ntfs and exfat support in user-space
 chmod u+s ./root/usr/bin/ntfs-3g ./root/usr/sbin/mount.exfat-fuse
 
+# add format usb script
+cat - <<"EOT" >> ./root/usr/bin/format_usb
+#!/bin/bash
+
+set -e
+
+# make sure usb is unmounted
+umount /home/nao/usb || true
+
+# wait some time
+sleep 1
+
+# partitioning
+sfdisk --no-reread /dev/sda <<"EOF"
+label: gpt
+start=        2048, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4
+EOF
+
+# wait for udev rules
+sleep 1
+
+mkfs.ext4 -E root_owner=1001:1001 /dev/sda1
+EOT
+chmod +x ./root/usr/bin/format_usb
+
 chown -R 1001:1001 ./root/nao
 
 # disable ssh password login
