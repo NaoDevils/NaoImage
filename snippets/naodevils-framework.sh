@@ -94,9 +94,9 @@ chmod 600 ./root/nao/.ssh/authorized_keys ./root/root/.ssh/authorized_keys
 
 # add usb stick mount
 cat - <<"EOT" >> ./root/etc/fstab
-/dev/sda1            /home/nao/usb        auto       rw,noatime,noauto,user  0  0
+/dev/sda1            /home/nao/logs        auto       rw,noatime,noauto,user  0  0
 EOT
-mkdir ./root/nao/usb
+mkdir ./root/nao/logs
 
 # give nao user permssions to write on usb stick
 cat - <<"EOT" >> ./root/etc/udev/rules.d/99-usb-stick.rules
@@ -113,7 +113,7 @@ cat - <<"EOT" >> ./root/usr/bin/format_usb
 set -e
 
 # make sure usb is unmounted
-umount /home/nao/usb || true
+umount /home/nao/logs || true
 
 # wait some time
 sleep 1
