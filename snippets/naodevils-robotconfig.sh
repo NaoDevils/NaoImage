@@ -7,11 +7,13 @@ cat - <<"EOT" > ./root/usr/sbin/robotconfig
 
 set -e
 
-if ! HOSTNAME=$( grep -Po "(?<=name = )\w+(?=;.*$(cat /sys/qi/head_id))" /home/nao/Config/Robots/robots.cfg ); then
+if ! HOSTNAME=$( grep -Po "(?<=name = )[\w\-]+(?=;.*$(cat /sys/qi/head_id))" /home/nao/Config/Robots/robots.cfg ); then
     exit 0
 fi
 
-NUMBER=$(( $(printf '%d\n' "'${HOSTNAME:0:1}") + 35 ))
+if ! NUMBER=$( grep -Po "(?<=$(cat /sys/qi/head_id)).* id = \d+(?=;)" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<=id = )\d+" ); then
+    exit 0
+fi
 
 cat - <<TOE > /etc/netplan/default.yaml
 network:
