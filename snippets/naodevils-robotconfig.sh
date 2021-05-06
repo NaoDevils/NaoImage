@@ -11,7 +11,11 @@ if ! HOSTNAME=$( grep -Po "(?<=name = )[\w\-]+(?=;.*$(cat /sys/qi/head_id))" /ho
     exit 0
 fi
 
-if ! NUMBER=$( grep -Po "(?<=$(cat /sys/qi/head_id)).* id = \d+(?=;)" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<=id = )\d+" ); then
+if ! LAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= lan = )[\d\.]+" ); then
+    exit 0
+fi
+
+if ! WLAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= wlan = )[\d\.]+" ); then
     exit 0
 fi
 
@@ -23,7 +27,7 @@ network:
     eth0:
       optional: true
       addresses:
-        - 192.168.101.$NUMBER/24
+        - $LAN/24
       dhcp4: false #eth0
       dhcp6: false #eth0
   wifis:
@@ -33,7 +37,7 @@ network:
         "SPL_5GHz":
           password: "Nao?!Nao?!"
       addresses:
-        - 10.0.12.$NUMBER/16
+        - $WLAN/16
       dhcp4: false
       dhcp6: false
 TOE
