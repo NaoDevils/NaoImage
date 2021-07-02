@@ -136,6 +136,9 @@ chown -R 1001:1001 ./root/nao
 # disable ssh password login
 sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!' ./root/etc/ssh/sshd_config
 
+# increase memory lock limit
+sed -i 's!@rt              -       memlock         40000!@rt              -       memlock         3145728!' ./root/etc/security/limits.conf
+
 # configure chrony
 cat - <<"EOT" > ./root/etc/chrony/chrony.conf
 server 10.1.0.1 iburst minpoll 0 maxpoll 6
