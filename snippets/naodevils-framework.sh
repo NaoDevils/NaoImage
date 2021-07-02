@@ -138,8 +138,7 @@ sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!' ./root/etc/ssh
 
 # configure chrony
 cat - <<"EOT" > ./root/etc/chrony/chrony.conf
-server 192.168.101.1 iburst minpoll 0 maxpoll 6
-server 192.168.101.122 iburst minpoll 0 maxpoll 6
+server 10.1.0.1 iburst minpoll 0 maxpoll 6
 # execute makestep in copyfiles
 #makestep 1.0 3
 driftfile /var/lib/chrony/chrony.drift

@@ -27,7 +27,7 @@ network:
     eth0:
       optional: true
       addresses:
-        - $LAN/24
+        - $LAN/16
       dhcp4: false #eth0
       dhcp6: false #eth0
   wifis:
