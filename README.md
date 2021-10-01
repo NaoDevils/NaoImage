@@ -20,10 +20,10 @@ These scripts generate an Ubuntu 20.04-based operating system for the Nao V6 tha
 # Generate Ubuntu-based filesystem image. (Requires root!)
 # Optional: Additional installation routines in the snippets/ directory can be
 #           enabled by specifying additional snippets parameters,
-#           e.g.: opencl naodevils-framework naodevils-robotconfig.
+#           e.g.: opencl naodevils-framework-base naodevils-robotconfig.
 #
 #                   NAO-OS-IMAGE     OUTPUT-EXT3-IMAGE [SNIPPETS...]
-./generate_image.sh nao-2.8.5.10.opn image.ext3
+./generate_image.sh nao-2.8.5.10.opn image.ext3        ubuntu
 
 # Convert filesystem image to .opn file. (Does not require root!)
 #
