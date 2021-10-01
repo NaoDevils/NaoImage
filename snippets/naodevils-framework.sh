@@ -230,14 +230,28 @@ if [ "$COPY_DATA" == "true" ]; then
     if [ -z "$FRAMEWORK_DIR" ]; then
         read -p "Please enter framework path: " FRAMEWORK_DIR
     fi
-
-    BUILD_CONFIG="${BUILD_CONFIG:-Develop}"
+    
+    if [ "${GIT_PULL:-true}" == "true" ]; then
+        git -C "$FRAMEWORK_DIR" pull
+    fi
+    
+    BUILD_CONFIG="${BUILD_CONFIG:-develop}"
+    
+    if [ "${COMPILE:-true}" == "true" ]; then
+        (
+            cd "$FRAMEWORK_DIR"
+            if [ ! -f "Build/nao-$BUILD_CONFIG/CMakeCache.txt" ]; then
+                cmake --preset "nao-$BUILD_CONFIG"
+            fi
+            cmake --build --preset "nao-$BUILD_CONFIG"
+        )
+    fi
 
     mkdir -p ./root/nao/bin ./root/nao/Config ./root/nao/logs
     cp -r "$FRAMEWORK_DIR/Config" ./root/nao
-    cp "$FRAMEWORK_DIR/Build/Linux/Nao/$BUILD_CONFIG/naodevils" \
-        "$FRAMEWORK_DIR/Build/Linux/ndevilsbase/$BUILD_CONFIG/naodevilsbase" \
-        "$FRAMEWORK_DIR/Build/Linux/sensorReader/$BUILD_CONFIG/sensorReader" \
+    cp "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/naodevils" \
+        "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/naodevilsbase" \
+        "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/sensorReader" \
         ./root/nao/bin
 
     chmod +x ./root/nao/bin/*
