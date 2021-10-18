@@ -94,7 +94,7 @@ chmod 600 ./root/nao/.ssh/authorized_keys ./root/root/.ssh/authorized_keys
 
 # add usb stick mount
 cat - <<"EOT" >> ./root/etc/fstab
-/dev/sda1            /home/nao/logs        auto       rw,noatime,noauto,user  0  0
+/dev/sda1            /home/nao/usb        auto       rw,noatime,noauto,user  0  0
 EOT
 mkdir ./root/nao/logs
 
