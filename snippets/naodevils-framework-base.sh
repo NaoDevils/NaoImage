@@ -156,6 +156,27 @@ sed -i 's#DAEMON_OPTS="-F -1"#DAEMON_OPTS="-r -s -F -1"#' ./root/etc/default/chr
 
 echo 'nao ALL=(ALL) NOPASSWD: /usr/bin/chronyc -n burst 2/10,/usr/bin/chronyc -n makestep 0.1 1' > ./root/etc/sudoers.d/chronyc
 
+# netplan configuration script
+cat - <<"EOT" > ./root/usr/sbin/configure-network
+#!/bin/bash
+
+set -e
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 [JSON]"
+    exit 1
+fi
+
+netplan set --origin-hint framework "network.wifis.wlan0=$1"
+
+mkdir -p /run/netplan
+mv /etc/netplan/framework.yaml /run/netplan
+
+netplan apply
+EOT
+chmod +x ./root/usr/sbin/configure-network
+echo 'nao ALL=(ALL) NOPASSWD: /usr/sbin/configure-network *' > ./root/etc/sudoers.d/configure-network
+
 # install nao devils alsa configuration
 mkdir -p ./root/etc/alsa/conf.d
 cat - <<"EOT" > ./root/etc/alsa/conf.d/naodevils.conf
