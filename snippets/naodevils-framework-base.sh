@@ -229,21 +229,21 @@ ctl.ttable {
 EOT
 
 # add text-to-speech output of ethernet ip address
-cat - <<"EOT" > ./root/etc/networkd-dispatcher/routable.d/say-ip
+mkdir -p ./root/etc/networkd-dispatcher/configured.d
+cat - <<"EOT" > ./root/etc/networkd-dispatcher/configured.d/say-ip
 #!/bin/bash
 
 set -e
 
 if [ "$IFACE" = "eth0" ] && [ "$(hostname)" = "Nao" ]; then
-    IP="$(ip -4 addr show eth0 | grep -oPm1 '(?<=inet\s)\d+(\.\d+){3}' | sed 's/\./. /g')"
-    espeak -ven "$IP"
+    read -r -a ip_addrs <<<"$IP_ADDRS"
+    IP="$(echo ${ip_addrs[0]} | sed 's/\./. /g')"
+    espeak -a 200 -vf5 -p75 -g14 -m "$IP"
 fi
-
-env > /test.txt
 
 exit 0
 EOT
 
-chmod +x ./root/etc/networkd-dispatcher/routable.d/say-ip
+chmod +x ./root/etc/networkd-dispatcher/configured.d/say-ip
 
 ############################ END FRAMEWORK INSTALLATION ############################
