@@ -161,18 +161,39 @@ cat - <<"EOT" > ./root/usr/sbin/configure-network
 #!/bin/bash
 
 set -e
+set -o pipefail
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 [JSON]"
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "Usage: $0 [-p] [JSON]"
     exit 1
 fi
 
-netplan set --origin-hint framework "network.wifis.wlan0=$1"
+if [ "$1" == "-p" ]; then
+    shift
+    PROFILE_JSON="$(cat /home/nao/Config/WLAN/$1)"
+    
+    rm -f /run/netplan/framework.yaml
+    netplan set --origin-hint default "network.wifis.wlan0=null"
+    
+    if [ "$PROFILE_JSON" != "null" ]; then
+        netplan set --origin-hint default "network.wifis.wlan0=$PROFILE_JSON"
+        
+        WLAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= wlan = )[\d\.]+" );
+        if ! [ -z "$WLAN" ]; then
+            netplan set --origin-hint default "network.wifis.wlan0={\"addresses\":[\"$WLAN/16\"]}"
+        fi
+    fi
+    
+    netplan apply </dev/null >/dev/null 2>&1 &
+else
+    netplan set --origin-hint framework "network.wifis.wlan0=$1"
 
-mkdir -p /run/netplan
-mv /etc/netplan/framework.yaml /run/netplan
+    mkdir -p /run/netplan
+    mv /etc/netplan/framework.yaml /run/netplan
+    
+    netplan apply
+fi
 
-netplan apply
 EOT
 chmod +x ./root/usr/sbin/configure-network
 echo 'nao ALL=(ALL) NOPASSWD: /usr/sbin/configure-network *' > ./root/etc/sudoers.d/configure-network
