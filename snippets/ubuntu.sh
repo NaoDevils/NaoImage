@@ -192,9 +192,16 @@ cp -avL \
     ./nao/usr/lib/libxml2.so.2\
     ./root/opt/aldebaran/lib
 
-# enable 32-bit dynamic linker
-ln -s /opt/aldebaran/lib/ld-linux.so.2 ./root/lib/ld-linux.so.2
-echo "/opt/aldebaran/lib" > ./root/etc/ld.so.conf.d/i386-linux-gnu.conf
+# set 32-bit dynamic linker paths
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/alfand
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/chest-mode
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/chest-version
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/fanspeed
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/flash-cx3
+patchelf --set-rpath '$ORIGIN/../lib' --force-rpath ./root/opt/aldebaran/bin/flash-cx3
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/hal
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/bin/lola
+patchelf --set-interpreter /opt/aldebaran/lib/ld-linux.so.2 ./root/opt/aldebaran/libexec/chest-harakiri
 
 # install packages, run ldconfig and add users and groups
 mount -o bind /dev ./root/dev

@@ -4,7 +4,7 @@ These scripts generate an Ubuntu 20.04-based operating system for the Nao V6 tha
 
 ## Requirements
 
-* Linux-based OS with debootstrap, pigz and mke2fs (e.g., Ubuntu 20.04).
+* Linux-based OS with debootstrap, pigz, mke2fs, and patchelf (e.g., Ubuntu 20.04).
 * Currently, for the Ubuntu image generation, root access is required to execute debootstrap and set filesystem permissions.
 * An official firmware image for Nao V6. Tested sha256 checksums (both should work): 
     
