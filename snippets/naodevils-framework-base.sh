@@ -229,25 +229,18 @@ ctl.multi {
         type hw;
         card 0;
 }
-
-# This creates a 4 channel interleaved pcm stream based on
-# the multi device. JACK will work with this one.
-
-pcm.ttable {
-        type route;
-        slave.pcm "multi";
-        slave.channels 4;
-        ttable.0.0 1;
-        ttable.1.1 1;
-        ttable.2.2 1;
-        ttable.3.3 1;
-}
-# see above.
-ctl.ttable {
-        type hw;
-        card 0;
-}
 EOT
+
+# remove alsa warnings abot non-existent devices
+sed -i '/pcm.rear cards.pcm.rear/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.center_lfe cards.pcm.center_lfe/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.side cards.pcm.side/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround21 cards.pcm.surround21/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround40 cards.pcm.surround40/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround41 cards.pcm.surround41/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround50 cards.pcm.surround50/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround51 cards.pcm.surround51/d' ./root/usr/share/alsa/alsa.conf
+sed -i '/pcm.surround71 cards.pcm.surround71/d' ./root/usr/share/alsa/alsa.conf
 
 # add text-to-speech output of ethernet ip address
 mkdir -p ./root/etc/networkd-dispatcher/configured.d
