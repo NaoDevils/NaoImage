@@ -1,19 +1,19 @@
 # generate root filesystem
 mkdir -p ./root
-debootstrap --variant=minbase --arch=amd64 focal ./root http://de.archive.ubuntu.com/ubuntu
+debootstrap --variant=minbase --arch=amd64 jammy ./root http://de.archive.ubuntu.com/ubuntu
 
 cat - <<"EOT" > ./root/etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu focal main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
 EOT
 
 # mount original nao image
@@ -221,13 +221,13 @@ apt-get dist-upgrade
 # reset-cameras requires i2c-tools and pciutils
 # wpasupplicant for wifi connection
 # run noninteractive and ignore error code
-DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-minimal htop openssh-server nano i2c-tools pciutils wpasupplicant
+DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-minimal htop openssh-server nano i2c-tools pciutils wpasupplicant e2fsprogs fdisk
 ln -s ../bin/lspci /usr/sbin/lspci # for reset-cameras.sh
 
 addgroup --system nao --gid 1001
 addgroup hal --gid 99
 addgroup usb --gid 85
-addgroup rt --gid 113
+addgroup rt --gid 114
 useradd -s /bin/bash -g nao -G tty,uucp,audio,video,plugdev,systemd-journal,syslog,hal,usb,rt,sudo -u 1001 -m -k /dev/null nao
 echo "nao:nao" | chpasswd
 echo "root:root" | chpasswd
@@ -252,7 +252,7 @@ Before=ssh.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/dpkg-reconfigure openssh-server
+ExecStart=/usr/bin/ssh-keygen -A -v
 ExecStartPost=/bin/systemctl disable generate_ssh_host_keys
 
 [Install]
@@ -382,9 +382,9 @@ chown -R 1001:1001 ./root/nao
 
 # kernel
 cp -av ./nao/boot ./root
-mkdir -p ./root/lib/modules
-cp -av ./nao/lib/modules/4.4.86-rt99-aldebaran ./root/lib/modules
-cp -av ./nao/lib/firmware ./root/lib
+mkdir -p ./root/usr/lib/modules
+cp -av ./nao/lib/modules/4.4.86-rt99-aldebaran ./root/usr/lib/modules
+cp -av ./nao/lib/firmware ./root/usr/lib
 echo "init=/sbin/init console=ttyS0,115200n8 noswap printk.time=1 net.ifnames=0 rootwait" > ./root/boot/cmdline
 
 # filesystem mounts
@@ -432,10 +432,10 @@ sed -i 's#/usr/share/firmware/CX3RDK_OV5640_#/opt/aldebaran/share/firmware/CX3RD
 sed -i 's#TAG+="systemd", #ATTR{index}=="0", TAG+="systemd", #' ./root/etc/udev/rules.d/42-usb-cx3.rules # fix for 5.4 kernel (two devices per camera)
 sed -i 's#/usr/libexec/reset-cameras.sh#/opt/aldebaran/libexec/reset-cameras.sh#' ./root/etc/udev/rules.d/99-aldebaran.rules
 cp -av ./nao/usr/lib/modules-load.d/* ./root/usr/lib/modules-load.d # load additional kernel modules
-cp -av ./nao/lib/systemd/system-shutdown/harakiri ./root/lib/systemd/system-shutdown # to power down chestboard on shut down
+cp -av ./nao/lib/systemd/system-shutdown/harakiri ./root/usr/lib/systemd/system-shutdown # to power down chestboard on shut down
 
 # disable ondemand cpu governor and keep performance mode
-rm ./root/etc/systemd/system/multi-user.target.wants/ondemand.service
+#rm ./root/etc/systemd/system/multi-user.target.wants/ondemand.service
 
 # initial dhcp network configuration
 cat - <<"EOT" > ./root/etc/netplan/default.yaml
