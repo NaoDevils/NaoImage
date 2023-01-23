@@ -15,11 +15,11 @@ SSH="$2"
 export FRAMEWORK_DIR=../NDevils2015/
 export DHCP=false
 
+./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu opencl naodevils-framework-base save-base naodevils-robotconfig naodevils-framework-copy
+
 GIT_IMAGE="$(git rev-parse --short HEAD)"
 GIT_FRAMEWORK="$(git -C "$FRAMEWORK_DIR" rev-parse --short HEAD)"
 DATE="$(date +%Y%m%d_%H%M%S)"
-
-./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu opencl naodevils-framework-base save-base naodevils-robotconfig naodevils-framework-copy
 ./generate_opn.sh "image.ext3" "naodevils_${DATE}_${GIT_FRAMEWORK}_${GIT_IMAGE}.opn"
 
 if [ "$#" -eq 2 ]; then
