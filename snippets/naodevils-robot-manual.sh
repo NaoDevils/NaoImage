@@ -12,6 +12,12 @@ network:
         - 10.1.12.1/16
       dhcp4: false
       dhcp6: false
+EOT
+
+cat - <<"EOT" > ./root/etc/netplan/wifi.yaml
+network:
+  version: 2
+  renderer: networkd
   wifis:
     wlan0:
       optional: true

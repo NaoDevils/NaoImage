@@ -160,40 +160,51 @@ echo 'nao ALL=(ALL) NOPASSWD: /usr/bin/chronyc -n burst 2/10,/usr/bin/chronyc -n
 cat - <<"EOT" > ./root/usr/sbin/configure-network
 #!/bin/bash
 
-set -e
-set -o pipefail
-
 if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
     echo "Usage: $0 [-p] [JSON]"
     exit 1
 fi
 
-if [ "$1" == "-p" ]; then
-    shift
-    PROFILE_JSON="$(cat /home/nao/Config/WLAN/$1)"
-    
-    rm -f /run/netplan/framework.yaml
-    netplan set --origin-hint default "network.wifis.wlan0=null"
-    
-    if [ "$PROFILE_JSON" != "null" ]; then
-        netplan set --origin-hint default "network.wifis.wlan0=$PROFILE_JSON"
-        
-        WLAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= wlan = )[\d\.]+" );
-        if ! [ -z "$WLAN" ]; then
-            netplan set --origin-hint default "network.wifis.wlan0={\"addresses\":[\"$WLAN/16\"]}"
-        fi
-    fi
-    
-    netplan apply </dev/null >/dev/null 2>&1 &
-else
-    netplan set --origin-hint framework "network.wifis.wlan0=$1"
-
-    mkdir -p /run/netplan
-    mv /etc/netplan/framework.yaml /run/netplan
-    
-    netplan apply
+if [ -f /etc/netplan/wifi.yaml ]; then
+    mv /etc/netplan/wifi.yaml /etc/netplan/wifi.yaml.bak
 fi
 
+(
+    set -e
+    set -o pipefail
+    
+    if [ "$1" == "-p" ]; then
+        shift
+        
+        if [ "$PROFILE_JSON" != "null" ]; then
+            PROFILE_JSON="$(cat /home/nao/Config/WLAN/$1)"
+            netplan set --origin-hint wifi "network.wifis.wlan0=$PROFILE_JSON"
+            
+            WLAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= wlan = )[\d\.]+" );
+            if ! [ -z "$WLAN" ]; then
+                netplan set "network.wifis.wlan0={\"addresses\":[\"$WLAN/16\"]}"
+            fi
+        fi
+        
+        netplan apply </dev/null >/dev/null 2>&1 &
+    else
+        netplan set --origin-hint wifi "network.wifis.wlan0=$1"
+        
+        netplan apply
+    fi
+
+)
+ret=$?
+
+if [ $ret != 0 ]; then
+    if [ -f /etc/netplan/wifi.yaml.bak ]; then
+        mv /etc/netplan/wifi.yaml.bak /etc/netplan/wifi.yaml
+    fi
+else
+    rm -f /etc/netplan/wifi.yaml.bak
+fi
+
+exit $ret
 EOT
 chmod +x ./root/usr/sbin/configure-network
 echo 'nao ALL=(ALL) NOPASSWD: /usr/sbin/configure-network *' > ./root/etc/sudoers.d/configure-network

@@ -30,12 +30,20 @@ network:
         - $LAN/16
       dhcp4: false #eth0
       dhcp6: false #eth0
+TOE
+
+cat - <<TOE > /etc/netplan/wifi.yaml
+network:
+  version: 2
+  renderer: networkd
   wifis:
     wlan0:
       optional: true
       access-points:
         "SPL_5GHz":
-          password: "Nao?!Nao?!"
+          auth:
+            key-management: "psk"
+            password: "Nao?!Nao?!"
       addresses:
         - $WLAN/16
       dhcp4: false
