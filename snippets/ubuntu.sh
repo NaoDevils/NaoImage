@@ -212,9 +212,6 @@ chroot ./root /bin/bash <<"EOT"
 set -e 
 set -o pipefail
 
-# update linker cache with aldebaran libs
-ldconfig
-
 apt-get update
 apt-get dist-upgrade
 
