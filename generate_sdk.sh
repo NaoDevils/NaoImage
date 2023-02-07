@@ -49,7 +49,7 @@ set -e
 set -o pipefail
 
 apt-get update
-apt-get dist-upgrade
+apt-get dist-upgrade -y
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends opencl-headers ocl-icd-opencl-dev libasound2-dev
 

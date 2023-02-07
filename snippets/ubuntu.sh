@@ -213,7 +213,7 @@ set -e
 set -o pipefail
 
 apt-get update
-apt-get dist-upgrade
+apt-get dist-upgrade -y
 
 # reset-cameras requires i2c-tools and pciutils
 # wpasupplicant for wifi connection
