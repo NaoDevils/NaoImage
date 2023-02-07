@@ -53,6 +53,14 @@ apt-get dist-upgrade -y
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends opencl-headers ocl-icd-opencl-dev libasound2-dev
 
+# make symlinks relative
+# https://unix.stackexchange.com/a/513357
+find usr/lib usr/lib64 -type l | while read l; do
+    target="$(realpath "$l")"
+	reltarget="$(realpath --relative-to="$(dirname "$(realpath -s "$l")")" "$target")"
+    ln -fsn "$reltarget" "$l"
+done
+
 exit
 EOT
 umount ./root-sdk/dev/pts
@@ -63,16 +71,5 @@ umount ./root-sdk/proc
 # clean up
 rm -r ./root-sdk/var/lib/apt/lists/* ./root-sdk/var/log/* ./root-sdk/var/cache/*
 
-# disable usr merge
-# VS2019 does not handle lib/ symlink correctly for intellisense
-# rm ./root-sdk/lib
-# mkdir ./root-sdk/lib
-# mv ./root-sdk/usr/lib/x86_64-linux-gnu ./root-sdk/lib
-
 # copy CMake toolchain file
 cp -av ubuntu.toolchain.cmake ./root-sdk
-
-GIT_IMAGE="$(git rev-parse --short HEAD)"
-DATE="$(date +%Y%m%d_%H%M%S)"
-
-tar -I "pigz -9" -C ./root-sdk -cf "naodevils_sdk_${DATE}_${GIT_IMAGE}.tgz" bin/ etc/ lib/ lib64/ root/ sbin/ usr/ var/ ubuntu.toolchain.cmake
