@@ -22,20 +22,20 @@ if [ -d ./root-sdk ]; then
 fi
 
 mkdir -p ./root-sdk
-debootstrap --variant=buildd --arch=amd64 focal ./root-sdk http://de.archive.ubuntu.com/ubuntu
+debootstrap --variant=buildd --arch=amd64 jammy ./root-sdk http://de.archive.ubuntu.com/ubuntu
 
 cat - <<"EOT" > ./root-sdk/etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu focal main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
 EOT
 
 
