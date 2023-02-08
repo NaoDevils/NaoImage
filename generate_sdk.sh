@@ -22,7 +22,7 @@ if [ -d ./root-sdk ]; then
 fi
 
 mkdir -p ./root-sdk
-debootstrap --variant=buildd --arch=amd64 jammy ./root-sdk http://de.archive.ubuntu.com/ubuntu
+debootstrap --variant=buildd --no-merged-usr --exclude=usrmerge --arch=amd64 jammy ./root-sdk http://de.archive.ubuntu.com/ubuntu
 
 cat - <<"EOT" > ./root-sdk/etc/apt/sources.list
 deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
@@ -55,7 +55,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends opencl
 
 # make symlinks relative
 # https://unix.stackexchange.com/a/513357
-find usr/lib usr/lib64 -type l | while read l; do
+find usr/lib lib64 lib/x86_64-linux-gnu -type l | while read l; do
     target="$(realpath "$l")"
 	reltarget="$(realpath --relative-to="$(dirname "$(realpath -s "$l")")" "$target")"
     ln -fsn "$reltarget" "$l"
