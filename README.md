@@ -1,10 +1,10 @@
 # Nao Image
 
-These scripts generate an Ubuntu 20.04-based operating system for the Nao V6 that includes the minimal necessary software binaries by Softbank required to communicate with the robot hardware. They generate an .opn file that is compatible with the official firmware upgrade file and it can be flashed directly on the Nao via USB flash drive or network.
+These scripts generate an Ubuntu 22.04-based operating system for the Nao V6 that includes the minimal necessary software binaries by Softbank required to communicate with the robot hardware. They generate an .opn file that is compatible with the official firmware upgrade file and it can be flashed directly on the Nao via USB flash drive or network.
 
 ## Requirements
 
-* Linux-based OS with debootstrap, pigz, mke2fs, and patchelf (e.g., Ubuntu 20.04).
+* Linux-based OS with debootstrap, pigz, mke2fs, and patchelf (e.g., Ubuntu 22.04).
 * Currently, for the Ubuntu image generation, root access is required to execute debootstrap and set filesystem permissions.
 * An official firmware image for Nao V6. Tested sha256 checksums (both should work): 
     
@@ -20,7 +20,7 @@ These scripts generate an Ubuntu 20.04-based operating system for the Nao V6 tha
 # Generate Ubuntu-based filesystem image. (Requires root!)
 # Optional: Additional installation routines in the snippets/ directory can be
 #           enabled by specifying additional snippets parameters,
-#           e.g.: opencl naodevils-framework-base naodevils-robotconfig.
+#           e.g.: naodevils-framework-base naodevils-robotconfig.
 #
 #                   NAO-OS-IMAGE     OUTPUT-EXT3-IMAGE [SNIPPETS...]
 ./generate_image.sh nao-2.8.5.10.opn image.ext3        ubuntu
@@ -29,17 +29,20 @@ These scripts generate an Ubuntu 20.04-based operating system for the Nao V6 tha
 #
 #                 INPUT-EXT3-IMAGE OUTPUT-OPN-FILE
 ./generate_opn.sh image.ext3       image.opn
+
+# Generate Nao Devils image (everything in one step, expects framework in ../NDevils2015/)
+./generate_naodevils.sh nao-2.8.5.10.opn
 ```
 
 ## Snippets
 
-* The base version of the image contains the original Linux kernel by SoftBank. Additionally, this repository comes with two alternative kernel versions that can be enabled via the opencl snippet. First, we provide a customized 4.4.86-rt99 kernel that includes the Intel graphics driver, and second, we provide a custom 5.4.70-rt40 kernel that is also a rebased version of SoftBank's kernel patches to a much newer kernel version.
+* The base version of the image contains the original Linux kernel by SoftBank. Additionally, this repository comes with two alternative kernel versions that can be enabled via the opencl snippet. First, we provide a [customized 4.4.86-rt99 kernel](https://github.com/aldebaran/linux-aldebaran/tree/sbr/v4.4.86-rt99-baytrail) that includes the Intel graphics driver, and second, we provide a [custom 5.4.70-rt40 kernel](https://github.com/NaoDevils/NaoKernel/tree/v5.4.70-rt40) that is also a rebased version of SoftBank's kernel patches to a much newer kernel version.
 * The naodevils-* snippets set up the robot for the Nao Devils framework and can be used as a reference.
 
 ## Installation
 
 * Via USB flash drive:
-    * Copy image to flash drive via `dd if=image.opn of=/dev/... bs=4096` on Linux or use a tool like [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/) on Windows.
+    * Copy image to flash drive via `dd if=image.opn of=/dev/... bs=4096` on Linux or use a tool like [ImageUSB](https://www.osforensics.com/tools/write-usb-images.html) on Windows.
 * Via network:
     * Nao's bootloader flashes .opn files found in the `.image` folder of its data partition automatically during start up. 
     * The data partition is mounted at:
