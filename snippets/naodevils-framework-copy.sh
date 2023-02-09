@@ -31,6 +31,10 @@ cp "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/naodevils" \
     "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/sensorReader" \
     ./root/nao/bin
 
+# copy public ssh key
+cat "$FRAMEWORK_DIR/Config/Keys/id_rsa_nao.pub" >> ./root/nao/.ssh/authorized_keys
+cat "$FRAMEWORK_DIR/Config/Keys/id_rsa_nao.pub" >> ./root/root/.ssh/authorized_keys
+
 chmod +x ./root/nao/bin/*
 chown -R 1001:1001 ./root/nao/bin ./root/nao/Config ./root/nao/logs
 
