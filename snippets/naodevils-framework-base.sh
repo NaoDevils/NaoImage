@@ -84,13 +84,9 @@ ln -s ../naodevils.service ./root/nao/.config/systemd/user/default.target.wants/
 ln -s ../naodevilsbase.service ./root/nao/.config/systemd/user/default.target.wants/naodevilsbase.service
 ln -s ../sensorreader.service ./root/nao/.config/systemd/user/default.target.wants/sensorreader.service
 
-# add ssh key
-mkdir -p ./root/nao/.ssh
-mkdir -p ./root/root/.ssh
-echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q9dQcRgn4dVOGt4h+jvlfDhkH/irCSqEAggZk1f2k+CD7PMIUViyzifEVcP0NObqiGlp98Pcw/8KMIkFQ4mS/dVbO8sVotKxo52qc2HV7Bcap7YvhYk00694sGfGH/ojeDmvguWOXBXM/xlawj4SsCdDb7YMhfn0YlWKl+CN1FvxCg+QmtZt/RXUpwPFz7j94EWbtRn2zeubdM5LNN+Ll1vPvt3BenDn0e67r6RM20s6IDuvizbzQTs1TkMwJjo1pOH9vmrqWV9fgzOsG1XApSTeGeFNOtlCOohEa/bdKdGyribBpS2y/C4WdqVU+NSbOU1dePP8e/74RxvV9ooyQ== 03:2a:af:40:61:9d:44:1e:58:4a:c8:f8:e1:74:75:07 NaoDevils-key' > ./root/nao/.ssh/authorized_keys
-echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5Q9dQcRgn4dVOGt4h+jvlfDhkH/irCSqEAggZk1f2k+CD7PMIUViyzifEVcP0NObqiGlp98Pcw/8KMIkFQ4mS/dVbO8sVotKxo52qc2HV7Bcap7YvhYk00694sGfGH/ojeDmvguWOXBXM/xlawj4SsCdDb7YMhfn0YlWKl+CN1FvxCg+QmtZt/RXUpwPFz7j94EWbtRn2zeubdM5LNN+Ll1vPvt3BenDn0e67r6RM20s6IDuvizbzQTs1TkMwJjo1pOH9vmrqWV9fgzOsG1XApSTeGeFNOtlCOohEa/bdKdGyribBpS2y/C4WdqVU+NSbOU1dePP8e/74RxvV9ooyQ== 03:2a:af:40:61:9d:44:1e:58:4a:c8:f8:e1:74:75:07 NaoDevils-key' > ./root/root/.ssh/authorized_keys
-chmod 700 ./root/nao/.ssh ./root/root/.ssh
-chmod 600 ./root/nao/.ssh/authorized_keys ./root/root/.ssh/authorized_keys
+# enable password root login
+# will be disabled in naodevils-framework-copy snippet or during addRobot.sh
+sed -i 's!#PermitRootLogin prohibit-password!PermitRootLogin yes!' ./root/etc/ssh/sshd_config
 
 # add usb stick mount
 cat - <<"EOT" >> ./root/etc/fstab
@@ -132,9 +128,6 @@ EOT
 chmod +x ./root/usr/bin/format_usb
 
 chown -R 1001:1001 ./root/nao
-
-# disable ssh password login
-sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!' ./root/etc/ssh/sshd_config
 
 # increase memory lock limit
 sed -i 's!@rt              -       memlock         40000!@rt              -       memlock         3145728!' ./root/etc/security/limits.conf

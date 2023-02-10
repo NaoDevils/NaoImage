@@ -31,12 +31,20 @@ cp "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/naodevils" \
     "$FRAMEWORK_DIR/Build/nao-$BUILD_CONFIG/sensorReader" \
     ./root/nao/bin
 
+# disable ssh password login
+sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!' ./root/etc/ssh/sshd_config
+
 # copy public ssh key
+mkdir -p ./root/nao/.ssh
+mkdir -p ./root/root/.ssh
 cat "$FRAMEWORK_DIR/Config/Keys/id_rsa_nao.pub" >> ./root/nao/.ssh/authorized_keys
 cat "$FRAMEWORK_DIR/Config/Keys/id_rsa_nao.pub" >> ./root/root/.ssh/authorized_keys
+chmod 700 ./root/nao/.ssh ./root/root/.ssh
+chmod 600 ./root/nao/.ssh/authorized_keys ./root/root/.ssh/authorized_keys
 
+# set permissions
 chmod +x ./root/nao/bin/*
-chown -R 1001:1001 ./root/nao/bin ./root/nao/Config ./root/nao/logs
+chown -R 1001:1001 ./root/nao/bin ./root/nao/Config ./root/nao/logs ./root/nao/.ssh
 
 # add git commit hashes
 GIT_IMAGE="$(git rev-parse --short HEAD)"
