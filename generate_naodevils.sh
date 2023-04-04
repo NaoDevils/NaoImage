@@ -28,14 +28,14 @@ fi
 
 if [ -z "$FRAMEWORK_DIR" ]; then
 	rm -rf ./root.tgz
-	./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu naodevils-framework-base save-base
+	./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu naodevils-framework-base joystick save-base
 	
 	GIT_FRAMEWORK="baseonly"
 else
 	export FRAMEWORK_DIR="$FRAMEWORK_DIR"
 	export DHCP=false
 
-	./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu naodevils-framework-base save-base naodevils-robotconfig naodevils-framework-copy
+	./generate_image.sh "$INPUT_OPN" "image.ext3" ubuntu naodevils-framework-base joystick save-base naodevils-robotconfig naodevils-framework-copy
 	
 	GIT_FRAMEWORK="$(git -C "$FRAMEWORK_DIR" rev-parse --short HEAD)"
 fi
