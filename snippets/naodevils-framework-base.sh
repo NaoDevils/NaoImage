@@ -169,10 +169,9 @@ fi
     if [ "$1" == "-p" ]; then
         shift
         
+        PROFILE_JSON="$(cat /home/nao/Config/WLAN/$1)"
+        netplan set --origin-hint wifi "network.wifis.wlan0=$PROFILE_JSON"
         if [ "$PROFILE_JSON" != "null" ]; then
-            PROFILE_JSON="$(cat /home/nao/Config/WLAN/$1)"
-            netplan set --origin-hint wifi "network.wifis.wlan0=$PROFILE_JSON"
-            
             WLAN=$( grep -Po "(?<=$(cat /sys/qi/head_id)).*" /home/nao/Config/Robots/robots.cfg | grep -Po "(?<= wlan = )[\d\.]+" );
             if ! [ -z "$WLAN" ]; then
                 netplan set "network.wifis.wlan0={\"addresses\":[\"$WLAN/16\"]}"
