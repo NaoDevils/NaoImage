@@ -10,6 +10,11 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
+if ! [ -f "$1" ]; then
+    echo "File '$1' not found"
+    exit 1
+fi
+
 # detects mount point of data partition automatically
 # single line to avoid multiple password / key authentications
 cat "$1" | ssh "$2" 'if [ -d /data ]; then DIR=/data; else DIR=/home; fi; mkdir -p $DIR/.image && cat - > $DIR/.image/image.opn && reboot'
