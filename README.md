@@ -31,7 +31,7 @@ These scripts generate an Ubuntu 22.04-based operating system for the Nao V6 tha
 ./generate_opn.sh image.ext3       image.opn
 
 # Generate Nao Devils image (everything in one step, expects framework in ../NDevils2015/)
-./generate_naodevils.sh -i nao-2.8.5.10.opn -f ../NDevils2015/
+./naodevils/generate.sh -i nao-2.8.5.10.opn -f ../NDevils2015/
 ```
 
 ## Snippets

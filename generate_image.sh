@@ -26,15 +26,7 @@ BLOCK_SIZE=4096
 
 mkdir -p ./opn
 
-# copy and extract filesystem and installer from .opn image
-if [ "$INPUT_IMAGE" -nt "./opn/installer.sh" ]; then
-    echo "Copy installer..."
-    dd if="$INPUT_IMAGE" of=./opn/installer.sh skip=$(($INSTALLER_OFFSET/$BLOCK_SIZE)) count=$(($INSTALLER_SIZE/$BLOCK_SIZE)) bs=$BLOCK_SIZE
-    sed -i '$ s/\x00*$//' ./opn/installer.sh # remove zeros
-    patch ./opn/installer.sh < installer.patch # fix installer
-    echo "Done!"
-fi
-
+# copy and extract filesystem from .opn image
 if [ "$INPUT_IMAGE" -nt "./opn/nao.ext3" ]; then
     echo "Copy filesystem..."
     dd if="$INPUT_IMAGE" of="./opn/nao.ext3.gz" skip=$(($IMAGE_OFFSET/$BLOCK_SIZE)) bs=$BLOCK_SIZE

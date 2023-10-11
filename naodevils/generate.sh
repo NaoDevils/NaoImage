@@ -42,7 +42,7 @@ fi
 
 GIT_IMAGE="$(git rev-parse --short HEAD)"
 DATE="$(date +%Y%m%d_%H%M%S)"
-./generate_naodevils_opn.sh "image.ext3" "naodevils_${DATE}_${GIT_FRAMEWORK}_${GIT_IMAGE}.opn"
+./generate_opn.sh "image.ext3" "naodevils_${DATE}_${GIT_FRAMEWORK}_${GIT_IMAGE}.opn"
 
 if ! [ -z "$SSH" ]; then
     ./flash_robot.sh "naodevils_${DATE}_${GIT_FRAMEWORK}_${GIT_IMAGE}.opn" "$SSH"
