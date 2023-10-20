@@ -445,6 +445,7 @@ network:
       dhcp4: true
       dhcp6: true
 EOT
+chmod 600 ./root/etc/netplan/default.yaml
 
 # shutdown and restart without password
 cat - <<"EOT" > ./root/etc/sudoers.d/shutdown

@@ -13,6 +13,7 @@ network:
       dhcp4: false
       dhcp6: false
 EOT
+chmod 600 ./root/etc/netplan/default.yaml
 
 cat - <<"EOT" > ./root/etc/netplan/wifi.yaml
 network:
@@ -28,6 +29,7 @@ network:
       dhcp4: false
       dhcp6: false
 EOT
+chmod 600 ./root/etc/netplan/wifi.yaml
 
 # set hostname
 echo "NaoDevil" > ./root/etc/hostname

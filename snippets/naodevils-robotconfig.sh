@@ -31,6 +31,7 @@ network:
       dhcp4: false #eth0
       dhcp6: false #eth0
 TOE
+chmod 600 /etc/netplan/default.yaml
 
 cat - <<TOE > /etc/netplan/wifi.yaml
 network:
@@ -49,6 +50,7 @@ network:
       dhcp4: false
       dhcp6: false
 TOE
+chmod 600 /etc/netplan/wifi.yaml
 
 echo "$HOSTNAME" > /etc/hostname
 sed -i "s#127\.0\.0\.1\W.*#127.0.0.1\tlocalhost $HOSTNAME#" /etc/hosts
