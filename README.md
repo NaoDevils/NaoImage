@@ -6,7 +6,7 @@ These scripts generate an Ubuntu 22.04-based operating system for the Nao V6 tha
 
 * Linux-based OS with debootstrap, pigz, mke2fs, and patchelf (e.g., Ubuntu 22.04).
 * Currently, for the Ubuntu image generation, root access is required to execute debootstrap and set filesystem permissions.
-* An official firmware image for Nao V6. Tested sha256 checksums (both should work): 
+* An official firmware image for Nao V6. Tested sha256 checksums (it works on both): 
     
     ```
     6f9dbf85a16bd660d89f779d0e02d17f28877f1b9e4c17d17d57b436aaa79283 *nao-2.8.5.10.opn
